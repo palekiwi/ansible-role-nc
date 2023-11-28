@@ -26,7 +26,7 @@
       MYSQL_PASSWORD: "{{ nc_db_password }}"
       NEXTCLOUD_ADMIN_USER: "{{ nc_env_admin_user }}"
       NEXTCLOUD_ADMIN_PASSWORD: "{{ nc_env_admin_password }}"
-      NEXTCLOUD_TRUSTED_DOMAINS: "{{ nc_env_trusted_domains }}"
+      NEXTCLOUD_TRUSTED_DOMAINS: "{{ nc_env_trusted_domains }} {{ nc_proxy_server_name }}"
       OVERWRITEPROTOCOL: "{{ nc_env_overwriteprotocol }}"
       OVERWRITECLIURL: "{{ nc_env_overwritecliurl }}"
       SMTP_HOST: "{{ nc_smtp_host }}"

@@ -1,0 +1,11 @@
+---
+- name: Generate an nginx configuration file.
+  when: nc_proxy_generate_config and nc_proxy_service == 'nginx'
+  block:
+    - name: Ensure a https conf template is installed.
+      ansible.builtin.template:
+        src: templates/nginx/https.conf.j2
+        dest: "{{ nc_proxy_path }}/{{ nc_proxy_server_name }}.conf"
+        mode: "0644"
+        owner: "{{ nc_user }}"
+        group: "{{ nc_user }}"
