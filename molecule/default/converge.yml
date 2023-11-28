@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+
+  tasks:
+    - name: "Include palekiwi.nc"
+      ansible.builtin.include_role:
+        name: "palekiwi.nc"
+      vars:
+        nc_user: vagrant
+        nc_env_overwriteprotocol: "http"

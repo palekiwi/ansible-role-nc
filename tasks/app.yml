@@ -1,0 +1,52 @@
+---
+- name: Ensure a pod exists for {{ nc_app_pod_name }}.
+  containers.podman.podman_pod:
+    name: "{{ nc_app_pod_name }}"
+    state: created
+    recreate: true
+    publish: "{{ nc_app_http_port }}:80"
+    network:
+      - "{{ nc_net_name }}"
+
+- name: Ensure app container exists.
+  containers.podman.podman_container:
+    pod: "{{ nc_app_pod_name }}"
+    name: "{{ nc_app_pod_name }}_container"
+    image: "{{ nc_app_image_name }}:{{ nc_app_image_tag }}"
+    state: created
+    restart_policy: on-failure
+    volumes:
+      - "{{ nc_app_volumes_dir }}/app:/var/www/html:Z"
+      - "{{ nc_app_volumes_dir }}/config:/var/www/html/config:Z"
+      - "{{ nc_app_volumes_dir }}/data:/var/www/html/data:Z"
+    env:
+      MYSQL_HOST: "{{ nc_db_pod_name }}"
+      MYSQL_USER: "{{ nc_db_user }}"
+      MYSQL_DATABASE: "{{ nc_db_database }}"
+      MYSQL_PASSWORD: "{{ nc_db_password }}"
+      NEXTCLOUD_ADMIN_USER: "{{ nc_env_admin_user }}"
+      NEXTCLOUD_ADMIN_PASSWORD: "{{ nc_env_admin_password }}"
+      NEXTCLOUD_TRUSTED_DOMAINS: "{{ nc_env_trusted_domains }}"
+      OVERWRITEPROTOCOL: "{{ nc_env_overwriteprotocol }}"
+      OVERWRITECLIURL: "{{ nc_env_overwritecliurl }}"
+      SMTP_HOST: "{{ nc_smtp_host }}"
+      SMTP_SECURE: "{{ nc_smtp_secure }}"
+      SMTP_PORT: "{{ nc_smtp_port }}"
+      SMTP_AUTHTYPE: "{{ nc_smtp_authtype }}"
+      SMTP_NAME: "{{ nc_smtp_name }}"
+      SMTP_PASSWORD: "{{ nc_smtp_password }}"
+      MAIL_FROM_ADDRESS: "{{ nc_mail_from_address }}"
+      MAIL_DOMAIN: "{{ nc_mail_domain }}"
+
+- name: Generate systemd units for {{ nc_app_pod_name }}.
+  containers.podman.podman_generate_systemd:
+    name: "{{ nc_app_pod_name }}"
+    dest: "/home/{{ nc_user }}/.config/systemd/user/"
+    restart_policy: on-failure
+
+- name: Ensure systemd units are started and enabled for {{ nc_app_pod_name }}.
+  ansible.builtin.systemd:
+    scope: user
+    daemon_reload: true
+    name: "pod-{{ nc_app_pod_name }}"
+    state: started

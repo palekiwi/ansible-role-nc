@@ -1,0 +1,12 @@
+[Unit]
+Description=Cron job for {{ nc_app_pod_name }}_container inside {{ nc_app_pod_name }}
+Requires=container-{{ nc_db_pod_name }}_container.service container-{{ nc_app_pod_name }}_container.service
+After=container-{{ nc_db_pod_name }}-container.service container-{{ nc_app_pod_name }}_container.service
+Wants={{ nc_app_pod_name }}-cron-app.timer
+
+[Service]
+ExecStart=podman exec -u www-data {{ nc_app_pod_name }}_container php -f /var/www/html/cron.php
+Type=oneshot
+
+[Install]
+WantedBy=default.target

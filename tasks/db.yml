@@ -1,0 +1,35 @@
+---
+- name: Ensure a pod exists for {{ nc_db_pod_name }}.
+  containers.podman.podman_pod:
+    name: "{{ nc_db_pod_name }}"
+    state: created
+    recreate: true
+    network:
+      - "{{ nc_net_name }}"
+
+- name: Ensure db container exists.
+  containers.podman.podman_container:
+    pod: "{{ nc_db_pod_name }}"
+    name: "{{ nc_db_pod_name }}_container"
+    image: "{{ nc_db_image_name }}:{{ nc_db_image_tag }}"
+    state: created
+    volumes:
+      - "{{ nc_db_volumes_dir }}/data:/var/lib/mysql:Z"
+    env:
+      MYSQL_USER: "{{ nc_db_user }}"
+      MYSQL_DATABASE: "{{ nc_db_database }}"
+      MYSQL_PASSWORD: "{{ nc_db_password }}"
+      MYSQL_ROOT_PASSWORD: "{{ nc_db_root_password }}"
+
+- name: Generate systemd units for {{ nc_db_pod_name }}.
+  containers.podman.podman_generate_systemd:
+    name: "{{ nc_db_pod_name }}"
+    dest: "/home/{{ nc_user }}/.config/systemd/user/"
+    restart_policy: on-failure
+
+- name: Ensure systemd units are started and enabled for {{ nc_db_pod_name }}.
+  ansible.builtin.systemd:
+    scope: user
+    daemon_reload: true
+    name: "pod-{{ nc_db_pod_name }}"
+    state: started

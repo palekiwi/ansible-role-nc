@@ -1,0 +1,24 @@
+---
+- name: Ensure app volume directories exist.
+  become: true
+  ansible.builtin.file:
+    path: "{{ nc_app_volumes_dir }}/{{ item.dir }}"
+    owner: 100032
+    group: 100032
+    mode: "{{ item.mode }}"
+    state: directory
+  loop:
+    - { dir: "app", mode: "755"}
+    - { dir: "config", mode: "755"}
+    - { dir: "data", mode: "770"}
+
+- name: Ensure db volume directories exist.
+  become: true
+  ansible.builtin.file:
+    path: "{{ nc_db_volumes_dir }}/{{ item.dir }}"
+    owner: 100998
+    group: 100998
+    mode: "{{ item.mode }}"
+    state: directory
+  loop:
+    - { dir: "data", mode: "0755"}

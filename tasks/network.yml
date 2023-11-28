@@ -1,0 +1,5 @@
+---
+- name: Create Podman network for nc.
+  containers.podman.podman_network:
+    name: "{{ nc_net_name }}"
+    state: present

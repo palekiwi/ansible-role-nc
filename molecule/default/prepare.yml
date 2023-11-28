@@ -1,0 +1,25 @@
+---
+- name: Prepare
+  become: true
+  hosts: all
+
+  tasks:
+    - name: Include epel role.
+      ansible.builtin.include_role:
+        name: palekiwi.epel
+
+    - name: Ensure podman is installed.
+      ansible.builtin.dnf:
+        name: podman
+        state: present
+
+    - name: Ensure required volume dirs are created.
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0755"
+        owner: vagrant
+        group: vagrant
+        state: directory
+      loop:
+        - /mnt/nc
+        - /mnt/nc_db

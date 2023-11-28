@@ -1,0 +1,20 @@
+---
+nc_user: "{{ ansible_user }}"
+nc_net_name: nc
+
+nc_app_pod_name: nc
+nc_app_http_port: 8080
+
+# images
+nc_app_image_name: "docker.io/library/nextcloud"
+nc_app_image_tag: "latest"
+
+# directories
+nc_app_volumes_dir: "/mnt/nc/"
+
+# NEXTCLOUD vars
+nc_env_admin_user: admin
+nc_env_admin_password: nextcloud
+nc_env_overwriteprotocol: "https"
+nc_env_overwritecliurl: ""
+nc_env_trusted_domains: "{{ ansible_host }}"

@@ -1,0 +1,6 @@
+---
+# handlers file for nextcloud
+- name: Wait to initialize db.
+  ansible.builtin.wait_for:
+    timeout: 10
+  listen: init-db
