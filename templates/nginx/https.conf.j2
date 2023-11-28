@@ -10,8 +10,8 @@ server {
 
     server_name {{ nc_proxy_server_name }};
 
-	ssl_certificate       {{ nc_proxy_ssl_certificate }}
-    ssl_certificate_key   {{ nc_proxy_ssl_certificate_key }}
+	ssl_certificate       {{ nc_proxy_ssl_certificate }};
+    ssl_certificate_key   {{ nc_proxy_ssl_certificate_key }};
 
     # set max upload size
     client_max_body_size 10G;
