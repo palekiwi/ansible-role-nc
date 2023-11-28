@@ -7,3 +7,6 @@
         src: templates/nginx/https.conf.j2
         dest: "{{ nc_proxy_path }}/{{ nc_proxy_server_name }}.conf"
         mode: "0644"
+        owner: "{{ nc_user }}"
+        group: "{{ nc_user }}"
+        setype: container_file_t
