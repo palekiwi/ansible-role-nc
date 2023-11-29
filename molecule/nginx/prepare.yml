@@ -1,0 +1,66 @@
+---
+- name: Prepare
+  hosts: all
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Include epel role.
+      ansible.builtin.include_role:
+        name: palekiwi.epel
+
+    - name: Ensure podman is installed.
+      become: true
+      ansible.builtin.dnf:
+        name: podman
+        state: present
+
+    - name: Include nginx role.
+      ansible.builtin.include_role:
+        name: palekiwi.nginx
+
+    - name: Generate certificates.
+      block:
+        - name: Ensure python pip is installed.
+          become: true
+          ansible.builtin.dnf:
+            name: python3-pip
+            state: present
+
+        - name: Ensure python cryptography is installed.
+          ansible.builtin.pip:
+            name: cryptography
+            state: present
+
+        - name: Generate an OpenSSL private key
+          community.crypto.openssl_privatekey:
+            path: "{{ nginx_certs_path }}/{{ nc_proxy_server_name }}.pem"
+            setype: container_file_t
+
+        - name: Generate an OpenSSL Certificate Signing Request with Subject information
+          community.crypto.openssl_csr:
+            path: "{{ nginx_certs_path }}/{{ nc_proxy_server_name }}.csr"
+            privatekey_path: "{{ nginx_certs_path }}/{{ nc_proxy_server_name }}.pem"
+            common_name: "{{ nc_proxy_server_name }}"
+            setype: container_file_t
+
+        - name: Generate a Self Signed OpenSSL certificate
+          community.crypto.x509_certificate:
+            path: "{{ nginx_certs_path }}/{{ nc_proxy_server_name }}.crt"
+            privatekey_path: "{{ nginx_certs_path }}/{{ nc_proxy_server_name }}.pem"
+            csr_path: "{{ nginx_certs_path }}/{{ nc_proxy_server_name }}.csr"
+            provider: selfsigned
+            setype: container_file_t
+
+    - name: Ensure required volume dirs are created.
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0755"
+        owner: vagrant
+        group: vagrant
+        state: directory
+      loop:
+        - "{{ nc_app_volumes_dir }}"
+        - "{{ nc_db_volumes_dir }}"

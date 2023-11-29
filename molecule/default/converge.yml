@@ -2,27 +2,7 @@
 - name: Converge
   hosts: all
 
-  vars:
-    nc_proxy_path: /srv/nginx/conf.d
-
   tasks:
-    - name: Create nginx conf.
-      become: true
-      ansible.builtin.file:
-        path: "{{ nc_proxy_path }}"
-        mode: "0755"
-        force: true
-        owner: vagrant
-        group: vagrant
-        state: directory
-
     - name: "Include palekiwi.nc"
       ansible.builtin.include_role:
         name: "palekiwi.nc"
-      vars:
-        nc_user: vagrant
-        nc_proxy_generate_config: true
-        nc_proxy_host: "test"
-        nc_proxy_server_name: "example.com"
-        nc_proxy_ssl_certificate: "/etc/certs/cert.pem"
-        nc_proxy_ssl_certificate_key: "/etc/certs/cert.key"

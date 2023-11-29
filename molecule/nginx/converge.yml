@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: "Include palekiwi.nc"
+      ansible.builtin.include_role:
+        name: "palekiwi.nc"
+
+    - name: Restart nginx-container.
+      containers.podman.podman_container_exec:
+        name: nginx-container
+        command: "nginx -s reload"

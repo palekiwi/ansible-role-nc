@@ -1,0 +1,17 @@
+---
+nginx_user: vagrant
+nginx_conf_path: /srv/nginx/conf.d
+nginx_certs_path: /srv/certs
+nginx_tmp_path: /srv/nginx/tmp
+
+nc_user: "{{ nginx_user }}"
+
+nc_app_volumes_dir: "/mnt/nc/"
+nc_db_volumes_dir: /mnt/nc_db
+
+nc_proxy_path: "{{ nginx_conf_path }}"
+nc_proxy_generate_config: true
+nc_proxy_host: "{{ ansible_host }}"
+nc_proxy_server_name: "example.com"
+nc_proxy_ssl_certificate: "/etc/certs/example.com.crt"
+nc_proxy_ssl_certificate_key: "/etc/certs/example.com.pem"
