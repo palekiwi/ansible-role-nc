@@ -16,6 +16,15 @@
         name: podman
         state: present
 
+    - name: Ensure certs dir exists.
+      become: true
+      ansible.builtin.file:
+        path: "{{ nginx_certs_path }}"
+        state: directory
+        owner: "{{ nginx_user }}"
+        group: "{{ nginx_user }}"
+        mode: "0755"
+
     - name: Include nginx role.
       ansible.builtin.include_role:
         name: palekiwi.nginx
