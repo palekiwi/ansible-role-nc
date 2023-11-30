@@ -20,6 +20,3 @@
 
     - name: Import cron tasks.
       ansible.builtin.import_tasks: cron.yml
-
-    - name: Import proxy tasks.
-      ansible.builtin.import_tasks: proxy.yml

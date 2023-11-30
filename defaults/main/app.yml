@@ -10,7 +10,7 @@ nc_app_image_name: "docker.io/library/nextcloud"
 nc_app_image_tag: "latest"
 
 # directories
-nc_app_volumes_dir: "/mnt/nc/"
+nc_app_volumes_dir: "/mnt/nc"
 
 # NEXTCLOUD vars
 nc_env_admin_user: admin
