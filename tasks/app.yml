@@ -20,7 +20,7 @@
       - "{{ nc_volumes_dir }}/config:/var/www/html/config:Z"
       - "{{ nc_volumes_dir }}/data:/var/www/html/data:Z"
     env:
-      MYSQL_HOST: "{{ db_pod_name }}"
+      MYSQL_HOST: "{{ nc_db_host }}"
       MYSQL_USER: "{{ nc_db_user }}"
       MYSQL_DATABASE: "{{ nc_db_database }}"
       MYSQL_PASSWORD: "{{ nc_db_password }}"

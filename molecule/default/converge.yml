@@ -2,7 +2,23 @@
 - name: Converge
   hosts: all
 
+  vars_files:
+    - vars/nc.yml
+    - vars/db.yml
+
   tasks:
+    - name: Ensure required volume dirs exist for app.
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0755"
+        owner: vagrant
+        group: vagrant
+        state: directory
+        setype: container_file_t
+      loop:
+        - "{{ nc_volumes_dir }}"
+
     - name: "Include palekiwi.nc"
       ansible.builtin.include_role:
         name: "palekiwi.nc"

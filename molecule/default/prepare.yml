@@ -1,7 +1,10 @@
 ---
 - name: Prepare
-  become: true
   hosts: all
+
+  vars_files:
+    - vars/db.yml
+    - vars/nc.yml
 
   tasks:
     - name: Include epel role.
@@ -9,17 +12,23 @@
         name: palekiwi.epel
 
     - name: Ensure podman is installed.
+      become: true
       ansible.builtin.dnf:
         name: podman
         state: present
 
-    - name: Ensure required volume dirs are created.
+    - name: Ensure required volume dirs exist for db.
+      become: true
       ansible.builtin.file:
         path: "{{ item }}"
         mode: "0755"
         owner: vagrant
         group: vagrant
         state: directory
+        setype: container_file_t
       loop:
-        - /mnt/nc
-        - /mnt/nc_db
+        - "{{ mariadb_volumes_dir }}"
+
+    - name: Include mariadb role.
+      ansible.builtin.include_role:
+        name: palekiwi.mariadb

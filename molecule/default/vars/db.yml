@@ -1,0 +1,19 @@
+---
+mariadb_user: vagrant
+
+mariadb_pod_name: mariadb
+mariadb_container_name: mariadb-container
+
+mariadb_volumes_dir: /mnt/mariadb
+
+mariadb_net_name: nc
+
+mariadb_publish: []
+
+mariadb_image_name: docker.io/library/mariadb
+mariadb_image_tag: latest
+
+mariadb_db_user: nextcloud
+mariadb_db_database: nextcloud
+mariadb_db_password: nextcloud
+mariadb_db_root_password: nextcloud
