@@ -1,0 +1,69 @@
+---
+- name: Prepare
+  hosts: all
+
+  vars_files:
+    - vars/db.yml
+
+  tasks:
+    - name: Include epel role.
+      ansible.builtin.include_role:
+        name: palekiwi.epel
+
+    - name: Ensure podman is installed.
+      become: true
+      ansible.builtin.dnf:
+        name: podman
+        state: present
+
+    - name: Create Podman network for db.
+      containers.podman.podman_network:
+        name: "{{ db_net_name }}"
+        state: present
+
+    - name: Ensure required volume dirs exist for db.
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0755"
+        owner: vagrant
+        group: vagrant
+        state: directory
+        setype: container_file_t
+      loop:
+        - "{{ db_volumes_dir }}/data"
+
+    - name: Ensure a pod exists for {{ db_pod_name }}.
+      containers.podman.podman_pod:
+        name: "{{ db_pod_name }}"
+        state: created
+        recreate: true
+        network:
+          - "{{ db_net_name }}"
+
+    - name: Ensure db container exists.
+      containers.podman.podman_container:
+        pod: "{{ db_pod_name }}"
+        name: "{{ db_container_name }}"
+        image: "{{ db_image_name }}:{{ db_image_tag }}"
+        state: created
+        volumes:
+          - "{{ db_volumes_dir }}/data:/var/lib/mysql"
+        env:
+          MYSQL_USER: "{{ db_user }}"
+          MYSQL_DATABASE: "{{ db_database }}"
+          MYSQL_PASSWORD: "{{ db_password }}"
+          MYSQL_ROOT_PASSWORD: "{{ db_root_password }}"
+
+    - name: Generate systemd units for {{ db_pod_name }}.
+      containers.podman.podman_generate_systemd:
+        name: "{{ db_pod_name }}"
+        dest: "/home/vagrant/.config/systemd/user/"
+        restart_policy: on-failure
+
+    - name: Ensure systemd units are started and enabled for {{ db_pod_name }}.
+      ansible.builtin.systemd:
+        scope: user
+        daemon_reload: true
+        name: "pod-{{ db_pod_name }}"
+        state: started

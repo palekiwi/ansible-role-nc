@@ -1,0 +1,10 @@
+[Unit]
+Description=Cron job timer for {{ nc_container_name }}.
+Requires={{ nc_container_name }}-cron.service
+
+[Timer]
+Unit={{ nc_container_name }}-cron.service
+OnCalendar=*:0/5
+
+[Install]
+WantedBy=timers.target

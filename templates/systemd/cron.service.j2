@@ -1,0 +1,12 @@
+[Unit]
+Description=Cron job for {{ nc_container_name }}.
+Requires=container-{{ nc_container_name }}.service
+After=container-{{ nc_container_name }}.service
+Wants={{ nc_container_name }}-cron.timer
+
+[Service]
+ExecStart=podman exec -u www-data {{ nc_container_name }} php -f /var/www/html/cron.php
+Type=oneshot
+
+[Install]
+WantedBy=default.target

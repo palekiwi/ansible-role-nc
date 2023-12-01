@@ -1,0 +1,15 @@
+---
+db_pod_name: db_nc
+db_container_name: db_nc-container
+
+db_volumes_dir: /mnt/db_nc
+
+db_net_name: nc
+
+db_image_name: "docker.io/library/mariadb"
+db_image_tag: "latest"
+
+db_user: nextcloud
+db_database: nextcloud
+db_password: nextcloud
+db_root_password: nextcloud

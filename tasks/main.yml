@@ -12,9 +12,6 @@
     - name: Import network tasks.
       ansible.builtin.import_tasks: network.yml
 
-    - name: Import db tasks.
-      ansible.builtin.import_tasks: db.yml
-
     - name: Import app tasks.
       ansible.builtin.import_tasks: app.yml
 

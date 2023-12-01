@@ -1,26 +1,26 @@
 ---
-- name: Ensure a pod exists for {{ nc_app_pod_name }}.
+- name: Ensure a pod exists for {{ nc_pod_name }}.
   containers.podman.podman_pod:
-    name: "{{ nc_app_pod_name }}"
+    name: "{{ nc_pod_name }}"
     state: created
     recreate: true
-    publish: "{{ nc_app_http_port }}:80"
+    publish: "{{ nc_http_port }}:80"
     network:
       - "{{ nc_net_name }}"
 
 - name: Ensure app container exists.
   containers.podman.podman_container:
-    pod: "{{ nc_app_pod_name }}"
-    name: "{{ nc_app_pod_name }}_container"
-    image: "{{ nc_app_image_name }}:{{ nc_app_image_tag }}"
+    pod: "{{ nc_pod_name }}"
+    name: "{{ nc_container_name }}"
+    image: "{{ nc_image_name }}:{{ nc_image_tag }}"
     state: created
     restart_policy: on-failure
     volumes:
-      - "{{ nc_app_volumes_dir }}/app:/var/www/html:Z"
-      - "{{ nc_app_volumes_dir }}/config:/var/www/html/config:Z"
-      - "{{ nc_app_volumes_dir }}/data:/var/www/html/data:Z"
+      - "{{ nc_volumes_dir }}/app:/var/www/html:Z"
+      - "{{ nc_volumes_dir }}/config:/var/www/html/config:Z"
+      - "{{ nc_volumes_dir }}/data:/var/www/html/data:Z"
     env:
-      MYSQL_HOST: "{{ nc_db_pod_name }}"
+      MYSQL_HOST: "{{ db_pod_name }}"
       MYSQL_USER: "{{ nc_db_user }}"
       MYSQL_DATABASE: "{{ nc_db_database }}"
       MYSQL_PASSWORD: "{{ nc_db_password }}"
@@ -38,15 +38,15 @@
       MAIL_FROM_ADDRESS: "{{ nc_mail_from_address }}"
       MAIL_DOMAIN: "{{ nc_mail_domain }}"
 
-- name: Generate systemd units for {{ nc_app_pod_name }}.
+- name: Generate systemd units for {{ nc_pod_name }}.
   containers.podman.podman_generate_systemd:
-    name: "{{ nc_app_pod_name }}"
+    name: "{{ nc_pod_name }}"
     dest: "/home/{{ nc_user }}/.config/systemd/user/"
     restart_policy: on-failure
 
-- name: Ensure systemd units are started and enabled for {{ nc_app_pod_name }}.
+- name: Ensure systemd units are started and enabled for {{ nc_pod_name }}.
   ansible.builtin.systemd:
     scope: user
     daemon_reload: true
-    name: "pod-{{ nc_app_pod_name }}"
+    name: "pod-{{ nc_pod_name }}"
     state: started
