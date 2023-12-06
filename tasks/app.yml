@@ -43,6 +43,7 @@
     name: "{{ nc_pod_name }}"
     dest: "/home/{{ nc_user }}/.config/systemd/user/"
     restart_policy: on-failure
+    force: true
 
 - name: Ensure systemd units are started and enabled for {{ nc_pod_name }}.
   ansible.builtin.systemd:
