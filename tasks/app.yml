@@ -19,6 +19,7 @@
       - "{{ nc_volumes_dir }}/app:/var/www/html:Z"
       - "{{ nc_volumes_dir }}/config:/var/www/html/config:Z"
       - "{{ nc_volumes_dir }}/data:/var/www/html/data:Z"
+      - "{{ nc_volumes_dir }}/external:/mnt/external:ro"
     env:
       MYSQL_HOST: "{{ nc_db_host }}"
       MYSQL_USER: "{{ nc_db_user }}"

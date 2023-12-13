@@ -11,3 +11,14 @@
     - { dir: "app", mode: "755"}
     - { dir: "config", mode: "755"}
     - { dir: "data", mode: "770"}
+
+- name: Ensure volume directory exists for external storage.
+  become: true
+  ansible.builtin.file:
+    path: "{{ nc_volumes_dir }}/{{ item.dir }}"
+    owner: "{{ nc_user }}"
+    group: "{{ nc_user }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  loop:
+    - { dir: "external", mode: "775"}
