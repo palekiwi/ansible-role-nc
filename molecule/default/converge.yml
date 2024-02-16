@@ -3,7 +3,6 @@
   hosts: all
 
   vars_files:
-    - vars/nc.yml
     - vars/db.yml
 
   tasks:
@@ -16,6 +15,7 @@
         group: vagrant
         state: directory
         setype: container_file_t
+        selevel: s0
       loop:
         - "{{ nc_volumes_dir }}"
 

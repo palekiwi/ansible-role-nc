@@ -9,7 +9,7 @@ nc_http_port: 8080
 
 # images
 nc_image_name: "docker.io/library/nextcloud"
-nc_image_tag: "latest"
+nc_image_tag: "28.0.2"
 
 # directories
 nc_volumes_dir: "/mnt/nc"
@@ -22,7 +22,7 @@ nc_env_overwritecliurl: ""
 nc_env_trusted_domains: "{{ ansible_host }}"
 
 # database vars
-nc_db_host: "{{ mariadb_pod_name }}"
-nc_db_user: "{{ mariadb_db_user }}"
-nc_db_database: "{{ mariadb_db_database }}"
-nc_db_password: "{{ mariadb_db_password }}"
+nc_db_host: "{{ ansible_host }}"
+nc_db_user: nextcloud
+nc_db_database: nextcloud
+nc_db_password: nextcloud

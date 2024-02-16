@@ -1,6 +1,7 @@
 ---
 - name: Prepare
   hosts: all
+  become: true
 
   vars_files:
     - vars/db.yml
@@ -12,23 +13,28 @@
         name: palekiwi.epel
 
     - name: Ensure podman is installed.
-      become: true
       ansible.builtin.dnf:
         name: podman
         state: present
 
-    - name: Ensure required volume dirs exist for db.
-      become: true
-      ansible.builtin.file:
-        path: "{{ item }}"
-        mode: "0755"
-        owner: vagrant
-        group: vagrant
-        state: directory
-        setype: container_file_t
-      loop:
-        - "{{ mariadb_volumes_dir }}"
+    - name: Enable linger for user {{ nc_user }}
+      ansible.builtin.command:
+        cmd: "loginctl enable-linger {{ nc_user }}"
+      changed_when: true
 
-    - name: Include mariadb role.
-      ansible.builtin.include_role:
-        name: palekiwi.mariadb
+    - name: Setup database.
+      become: true
+      become_user: "{{ nc_user }}"
+      block:
+        - name: Install db kube definition.
+          ansible.builtin.template:
+            src: templates/postgres.yml.j2
+            dest: "/tmp/postgres.yml"
+            mode: "0644"
+
+        - name: Ensure postgres is deployed.
+          containers.podman.podman_play:
+            kube_file: /tmp/postgres.yml
+            state: started
+            recreate: true
+            network: host

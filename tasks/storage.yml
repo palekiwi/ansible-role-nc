@@ -7,9 +7,9 @@
     group: 100032
     mode: "{{ item.mode }}"
     state: directory
+    setype: container_file_t
+    selevel: s0
   loop:
-    - { dir: "app", mode: "755"}
-    - { dir: "config", mode: "755"}
     - { dir: "data", mode: "770"}
 
 - name: Ensure volume directory exists for external storage.
@@ -20,5 +20,7 @@
     group: "{{ nc_user }}"
     mode: "{{ item.mode }}"
     state: directory
+    setype: container_file_t
+    selevel: s0
   loop:
     - { dir: "external", mode: "775"}

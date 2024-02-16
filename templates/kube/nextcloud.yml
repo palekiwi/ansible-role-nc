@@ -1,0 +1,82 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app:  "{{ nc_pod_name}}"
+  name: "{{ nc_pod_name}}"
+spec:
+  containers:
+    - name: "{{ nc_container_name}}"
+      image: "{{ nc_image_name }}:{{ nc_image_tag }}"
+      volumeMounts:
+        - mountPath: /var/www/html
+          name: "{{ nc_pod_name }}-app"
+        - mountPath: /var/www/html/config
+          name: "{{ nc_pod_name }}-config"
+        - mountPath: /var/www/html/data
+          name: "{{ nc_pod_name }}-data"
+        - mountPath: /mnt/external
+          name: "{{ nc_pod_name }}-external"
+          readOnly: true
+        - mountPath: /etc/localtime
+          name: "{{ nc_pod_name }}-localtime"
+          readOnly: true
+      env:
+        - name: MYSQL_HOST
+          value: "{{ nc_db_host }}"
+        - name: MYSQL_USER
+          value: "{{ nc_db_user }}"
+        - name: MYSQL_DATABASE
+          value: "{{ nc_db_database }}"
+        - name: MYSQL_PASSWORD
+          value: "{{ nc_db_password }}"
+        - name: NEXTCLOUD_ADMIN_USER
+          value: "{{ nc_env_admin_user }}"
+        - name: NEXTCLOUD_ADMIN_PASSWORD
+          value: "{{ nc_env_admin_password }}"
+        - name: NEXTCLOUD_TRUSTED_DOMAINS
+          value: "{{ nc_env_trusted_domains }}"
+        - name: OVERWRITEPROTOCOL
+          value: "{{ nc_env_overwriteprotocol }}"
+        - name: OVERWRITECLIURL
+          value: "{{ nc_env_overwritecliurl }}"
+        - name: SMTP_HOST
+          value: "{{ nc_smtp_host }}"
+        - name: SMTP_SECURE
+          value: "{{ nc_smtp_secure }}"
+        - name: SMTP_PORT
+          value: "{{ nc_smtp_port }}"
+        - name: SMTP_AUTHTYPE
+          value: "{{ nc_smtp_authtype }}"
+        - name: SMTP_NAME
+          value: "{{ nc_smtp_name }}"
+        - name: SMTP_PASSWORD
+          value: "{{ nc_smtp_password }}"
+        - name: MAIL_FROM_ADDRESS
+          value: "{{ nc_mail_from_address }}"
+        - name: MAIL_DOMAIN
+          value: "{{ nc_mail_domain }}"
+      ports:
+        - containerPort: 8080
+          hostPort: 8080
+  restartPolicy: OnFailure
+  volumes:
+    - name: "{{ nc_pod_name }}-app"
+      persistentVolumeClaim:
+        claimName: "{{ nc_pod_name }}-app"
+    - name: "{{ nc_pod_name }}-config"
+      persistentVolumeClaim:
+        claimName: "{{ nc_pod_name }}-config"
+    - name: "{{ nc_pod_name }}-data"
+      hostPath:
+        path: "{{ nc_volumes_dir }}/data"
+        type: Directory
+    - name: "{{ nc_pod_name }}-external"
+      hostPath:
+        path: "{{ nc_volumes_dir }}/external"
+        type: Directory
+    - name: "{{ nc_pod_name }}-localtime"
+      hostPath:
+        path: /etc/localtime
+        type: File
