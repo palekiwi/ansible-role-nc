@@ -3,7 +3,7 @@
   hosts: all
 
   vars_files:
-    - vars/db.yml
+    - vars/nc.yml
 
   tasks:
     - name: Ensure required volume dirs exist for app.

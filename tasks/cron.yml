@@ -2,7 +2,7 @@
 - name: Ensure systemd service is copied for nextcloud cron job.
   ansible.builtin.template:
     src: templates/systemd/cron.service.j2
-    dest: /home/{{ nc_user }}/.config/systemd/user/{{ nc_container_name }}-cron.service
+    dest: /home/{{ nc_user }}/.config/systemd/user/cron-{{ nc_pod_name }}-{{ nc_container_name }}.service
     mode: "644"
     owner: "{{ nc_user }}"
     group: "{{ nc_user }}"
@@ -10,7 +10,7 @@
 - name: Ensure systemd timer is copied for nextcloud cron job.
   ansible.builtin.template:
     src: templates/systemd/cron.timer.j2
-    dest: /home/{{ nc_user }}/.config/systemd/user/{{ nc_container_name }}-cron.timer
+    dest: /home/{{ nc_user }}/.config/systemd/user/cron-{{ nc_pod_name }}-{{ nc_container_name }}.timer
     mode: "644"
     owner: "{{ nc_user }}"
     group: "{{ nc_user }}"
@@ -19,6 +19,6 @@
   ansible.builtin.systemd:
     scope: user
     daemon_reload: true
-    name: "{{ nc_container_name }}-cron.timer"
+    name: "cron-{{ nc_pod_name }}-{{ nc_container_name }}.timer"
     enabled: true
     state: started

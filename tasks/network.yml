@@ -1,5 +1,0 @@
----
-- name: Ensure Podman network for nc exists.
-  containers.podman.podman_network:
-    name: "{{ nc_net_name }}"
-    state: present

@@ -1,7 +1,4 @@
 ---
-- name: Import setup tasks.
-  ansible.builtin.import_tasks: setup.yml
-
 - name: Import storage tasks.
   ansible.builtin.import_tasks: storage.yml
 
@@ -9,9 +6,6 @@
   become: true
   become_user: "{{ nc_user }}"
   block:
-    - name: Import network tasks.
-      ansible.builtin.import_tasks: network.yml
-
     - name: Import app tasks.
       ansible.builtin.import_tasks: app.yml
 

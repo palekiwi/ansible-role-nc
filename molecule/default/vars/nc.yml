@@ -1,9 +1,9 @@
 ---
 nc_user: vagrant
-nc_net_name: nc
+nc_network: nc
 
 nc_pod_name: nc
-nc_container_name: nc-container
+nc_container_name: nextcloud
 
 nc_http_port: 8080
 
@@ -12,7 +12,7 @@ nc_image_name: "docker.io/library/nextcloud"
 nc_image_tag: "28.0.2"
 
 # directories
-nc_volumes_dir: "/mnt/nc"
+nc_volumes_dir: "/srv/nc"
 
 # env vars: NEXTCLOUD
 nc_env_admin_user: admin
@@ -22,7 +22,7 @@ nc_env_overwritecliurl: ""
 nc_env_trusted_domains: "{{ ansible_host }}"
 
 # database vars
-nc_db_host: "{{ ansible_host }}"
-nc_db_user: nextcloud
-nc_db_database: nextcloud
-nc_db_password: nextcloud
+nc_postgres_db: nextcloud
+nc_postgres_user: nextcloud
+nc_postgres_host: "{{ ansible_host }}"
+nc_postgres_password: nextcloud

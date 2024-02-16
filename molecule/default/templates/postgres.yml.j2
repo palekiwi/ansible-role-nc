@@ -11,11 +11,11 @@ spec:
       image: "docker.io/library/postgres:16.1"
       env:
         - name: POSTGRES_USER
-          value: "{{ nc_db_user }}"
+          value: "{{ nc_postgres_user }}"
         - name: POSTGRES_PASSWORD
-          value: "{{ nc_db_password }}"
+          value: "{{ nc_postgres_password }}"
         - name: POSTGRES_DB
-          value: "{{ nc_db_database }}"
+          value: "{{ nc_postgres_db }}"
         - name: TZ
           value: Asia/Taipei
   restartPolicy: OnFailure
