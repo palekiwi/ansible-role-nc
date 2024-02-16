@@ -1,5 +1,0 @@
----
-nginx_user: vagrant
-nginx_conf_path: /srv/nginx/conf.d
-nginx_certs_path: /srv/certs
-nginx_tmp_path: /srv/nginx/tmp

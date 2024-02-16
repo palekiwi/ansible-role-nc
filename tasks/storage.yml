@@ -7,6 +7,7 @@
     group: 100032
     mode: "{{ item.mode }}"
     state: directory
+    recurse: true
     setype: container_file_t
     selevel: s0
   loop:
@@ -22,5 +23,6 @@
     state: directory
     setype: container_file_t
     selevel: s0
+    recurse: true
   loop:
     - { dir: "external", mode: "775"}

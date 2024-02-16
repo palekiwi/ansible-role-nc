@@ -1,7 +1,0 @@
----
-nc_proxy_path: "{{ nginx_conf_path }}"
-nc_proxy_host: "{{ ansible_host }}"
-nc_proxy_use_certbot: false
-nc_proxy_server_name: "example.com"
-nc_proxy_ssl_certificate: "/etc/certs/example.com.crt"
-nc_proxy_ssl_certificate_key: "/etc/certs/example.com.pem"
