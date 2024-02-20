@@ -1,4 +1,15 @@
 ---
+- name: Set correct ownership on data.
+  become: true
+  become_method: containers.podman.podman_unshare
+  ansible.builtin.file:
+    state: directory
+    path: "{{ nc_volumes_dir }}/data"
+    mode: "0770"
+    recurse: true
+    owner: 33
+    group: 33
+
 - name: Install nc kube definition.
   ansible.builtin.template:
     src: templates/kube/nextcloud.yml.j2

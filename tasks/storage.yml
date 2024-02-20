@@ -1,18 +1,4 @@
 ---
-- name: Ensure app volume directories exist.
-  become: true
-  ansible.builtin.file:
-    path: "{{ nc_volumes_dir }}/{{ item.dir }}"
-    owner: 100032
-    group: 100032
-    mode: "{{ item.mode }}"
-    state: directory
-    recurse: true
-    setype: container_file_t
-    selevel: s0
-  loop:
-    - { dir: "data", mode: "770"}
-
 - name: Ensure volume directory exists for external storage.
   become: true
   ansible.builtin.file:
