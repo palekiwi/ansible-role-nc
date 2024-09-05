@@ -65,7 +65,7 @@ spec:
           value: "{{ nc_mail_domain }}"
       ports:
         - containerPort: 80
-          hostPort: 8080
+          hostPort: 8088
   restartPolicy: OnFailure
   volumes:
     - name: "{{ nc_pod_name }}-app"
