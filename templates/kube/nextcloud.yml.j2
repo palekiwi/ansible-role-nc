@@ -69,11 +69,13 @@ spec:
   restartPolicy: OnFailure
   volumes:
     - name: "{{ nc_pod_name }}-app"
-      persistentVolumeClaim:
-        claimName: "{{ nc_pod_name }}-app"
+      hostPath:
+        path: "{{ nc_volumes_dir }}/app"
+        type: Directory
     - name: "{{ nc_pod_name }}-config"
-      persistentVolumeClaim:
-        claimName: "{{ nc_pod_name }}-config"
+      hostPath:
+        path: "{{ nc_volumes_dir }}/config"
+        type: Directory
     - name: "{{ nc_pod_name }}-data"
       hostPath:
         path: "{{ nc_volumes_dir }}/data"
