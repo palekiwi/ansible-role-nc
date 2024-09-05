@@ -9,6 +9,8 @@
     recurse: true
     owner: 33
     group: 33
+    setype: container_file_t
+    selevel: s0
 
 - name: Install nc kube definition.
   ansible.builtin.template:
